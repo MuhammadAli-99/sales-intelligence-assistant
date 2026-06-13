@@ -1,4 +1,4 @@
-# 🇩🇪 German Market Sales Intelligence
+# German Market Sales Intelligence
 
 > AI-powered e-commerce analytics · BigQuery + Claude AI + Streamlit  
 > Ask questions about the German market in plain English or German. Get SQL, charts, and business insights automatically.
@@ -161,5 +161,7 @@ sales-intelligence-assistant/
 ## 📬 Contact
 
 **Muhammad Ali**  
-TU Ilmenau · Data Analytics  
+TU Ilmenau · Data Analytics 
+muhammadali21k@gmail.com
++49 15563 057197 
 [GitHub](https://github.com/MuhammadAli-99)
