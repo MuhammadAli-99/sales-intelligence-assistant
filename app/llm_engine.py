@@ -7,9 +7,11 @@ load_dotenv(dotenv_path=Path("C:/Users/HP/sales-intelligence-assistant/.env"))
 import anthropic
 from app.bigquery_client import run_query, get_schema_context
 
-client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+def get_client():
+    return anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
 def generate_sql(user_question: str) -> str:
+    client = get_client()
     schema = get_schema_context()
     prompt = f"""You are a BigQuery SQL expert working for a German e-commerce company.
 Given the schema below, write a valid BigQuery SQL query that answers the user's question.
@@ -37,12 +39,14 @@ Rules:
     return response.content[0].text.strip()
 
 def generate_insight(question: str, df_summary: str, lang_instruction: str = "Respond in English.") -> str:
+    client = get_client()
     prompt = f"""You are a senior data analyst working for a German e-commerce company in the DACH region.
 A business stakeholder asked: "{question}"
 
 Here is the query result summary:
 {df_summary}
 
+{lang_instruction}
 Write a 2-3 sentence business insight interpreting these results for a German business audience.
 - Reference relevant German market context where appropriate (seasonal events, city differences, DACH region)
 - Express monetary values in EUR
