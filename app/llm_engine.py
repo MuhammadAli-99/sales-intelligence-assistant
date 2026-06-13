@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
+load_dotenv(dotenv_path=Path("C:/Users/HP/sales-intelligence-assistant/.env"))
 
 import anthropic
 from app.bigquery_client import run_query, get_schema_context
@@ -36,7 +36,7 @@ Rules:
     )
     return response.content[0].text.strip()
 
-def generate_insight(question: str, df_summary: str) -> str:
+def generate_insight(question: str, df_summary: str, lang_instruction: str = "Respond in English.") -> str:
     prompt = f"""You are a senior data analyst working for a German e-commerce company in the DACH region.
 A business stakeholder asked: "{question}"
 
@@ -57,15 +57,28 @@ Write a 2-3 sentence business insight interpreting these results for a German bu
     return response.content[0].text.strip()
 
 if __name__ == "__main__":
+    print("Starting test...")
     question = "Which German cities generated the most revenue in Q4 2020?"
-    print("Generating SQL...")
-    sql = generate_sql(question)
-    print(f"SQL:\n{sql}\n")
 
-    print("Running query on German market data...")
-    df = run_query(sql)
-    print(f"Results:\n{df}\n")
+    print("Step 1: Generating SQL...")
+    try:
+        sql = generate_sql(question)
+        print(f"SQL generated successfully:\n{sql}\n")
+    except Exception as e:
+        print(f"SQL generation failed: {e}")
+        exit()
 
-    print("Generating insight...")
-    insight = generate_insight(question, df.to_string())
-    print(f"Insight:\n{insight}")
+    print("Step 2: Running BigQuery query...")
+    try:
+        df = run_query(sql)
+        print(f"Query returned {len(df)} rows:\n{df}\n")
+    except Exception as e:
+        print(f"BigQuery query failed: {e}")
+        exit()
+
+    print("Step 3: Generating insight...")
+    try:
+        insight = generate_insight(question, df.to_string())
+        print(f"Insight:\n{insight}")
+    except Exception as e:
+        print(f"Insight generation failed: {e}")
